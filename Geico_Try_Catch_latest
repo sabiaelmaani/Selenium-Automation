@@ -1,0 +1,132 @@
+package Assignments;
+
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+import java.util.ArrayList;
+
+public class Assignment5_geico {
+    public static void main(String[] args) throws InterruptedException {
+
+
+        WebDriver driver = new ChromeDriver();
+        driver.manage().window().maximize();
+
+        ArrayList<String> zipCode = new ArrayList<>();
+        zipCode.add("10001");
+        zipCode.add("25405");
+
+        ArrayList<String> firstName = new ArrayList<>();
+        firstName.add("zohran");
+        firstName.add("andrew");
+
+        ArrayList<String> lastName = new ArrayList<>();
+        lastName.add("mamdani");
+        lastName.add("cuomo");
+
+        ArrayList<String> dob = new ArrayList<>();
+        dob.add("01181991");
+        dob.add("03041985");
+
+
+        //using try and catch, loop through the following steps using the data in the array lists
+        for (int i = 0; i < zipCode.size(); i++) {
+            //navigate to geico.com
+            driver.navigate().to("https://www.geico.com");
+
+            Thread.sleep(2000);
+
+            //enter the zip code from array list using try and catch
+            try {
+                driver.findElement(org.openqa.selenium.By.xpath("//*[@id='ssp-service-zip']")).sendKeys(zipCode.get(i));
+            } catch (Exception e) {
+                System.out.println("Unable to enter zip code " + e);
+            }//end of try catch
+
+            Thread.sleep(2000);
+
+            //select product from the options using the array list data for product. Use try and catch
+            try {
+                driver.findElements(org.openqa.selenium.By.xpath("//*[@class='icon-homeowner-ins']")).get(0).click();
+            } catch (Exception e) {
+                System.out.println("Unable to select product " + e);
+            }//end of try catch
+            Thread.sleep(2000);
+
+            //click on start quote button using try and catch
+            try {
+                driver.findElement(org.openqa.selenium.By.xpath("//*[text()='Start My Quote']")).click();
+            } catch (Exception e) {
+                System.out.println("Unable to click on Start My Quote button " + e);
+            }//end of try catch
+
+            Thread.sleep(5000);
+
+            //enter first name using try and catch
+            try {
+                WebElement fName = driver.findElement(org.openqa.selenium.By.xpath("//*[@aria-label='First Name']"));
+                fName.click();
+                Thread.sleep(1000);
+                fName.sendKeys(firstName.get(i));
+            } catch (Exception e) {
+                System.out.println("Unable to enter first name " + e);
+            }//end of try catch
+            Thread.sleep(2500);
+
+
+            //enter last name using try and catch
+            try {
+                WebElement lName = driver.findElement(org.openqa.selenium.By.xpath("//*[@aria-label='Last Name']"));
+                lName.click();
+                Thread.sleep(1000);
+                lName.sendKeys(lastName.get(i));
+            } catch (Exception e) {
+                System.out.println("Unable to enter last name " + e);
+            }//end of try catch
+
+            //enter dob using try and catch
+            try {
+                driver.findElement(org.openqa.selenium.By.xpath("//*[@aria-label='Date of Birth']")).sendKeys(dob.get(i));
+            } catch (Exception e) {
+                System.out.println("Unable to enter date of birth " + e);
+            }//end of try catch
+            Thread.sleep(2000);
+
+            JavascriptExecutor jse = (JavascriptExecutor) driver;
+
+            //scroll down until the element "next button" is visible
+            WebElement nextButton = driver.findElement(org.openqa.selenium.By.xpath("//*[@type='submit']"));
+
+            jse.executeScript("arguments[0].scrollIntoView(true);", nextButton);
+            Thread.sleep(2000);
+
+            //click on next button using try and catch
+            try {
+                nextButton.submit();
+            } catch (Exception e) {
+                System.out.println("Unable to click on Next button " + e);
+            }//end of try catch
+
+            Thread.sleep(7000);
+
+            try {
+                WebElement message = driver.findElement(org.openqa.selenium.By.xpath("//*[@class='col-sm-12 col-md-8']"));
+                if (message.isDisplayed()) {
+                    System.out.println("\nError message: " + message.getText() + "\n");
+                }
+            } catch (Exception e) {
+                System.out.println("Unable to find error message " + e);
+            }//end of try catch
+
+            Thread.sleep(1000);
+
+
+        }//end of for loop
+
+        //quit the driver
+        driver.quit();
+
+    }//end of main
+}//end of class
