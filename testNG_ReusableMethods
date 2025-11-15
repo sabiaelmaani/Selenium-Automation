@@ -1,0 +1,87 @@
+package Assignments;
+
+import Reusable_Methods.Static_Methods;
+import org.openqa.selenium.WebDriver;
+import org.testng.annotations.AfterSuite;
+import org.testng.annotations.BeforeSuite;
+import org.testng.annotations.Test;
+
+import java.util.ArrayList;
+
+import static Reusable_Methods.Static_Methods.*;
+
+public class Assignment6_TestNGAnnotations {
+
+    //declare the global variables outside the methods so that it can be reusable with other annotation methods
+    WebDriver driver;
+    //declare the arraylist variable
+    ArrayList<String> policyTypes = new ArrayList<>();
+
+    @BeforeSuite
+    //call method to set up driver from static methods class
+    public void setUpDriver(){
+        driver = getDriver();
+    }//end of before suite
+
+    @AfterSuite
+   public void quitDriver(){
+        driver.quit();
+    }//end of after suite
+
+    @Test(priority = 1)
+
+    public void TC1_GeicoLoginTest(){
+
+        //add values to array list
+        policyTypes.add("Snowmobile");
+        policyTypes.add("Motorcycle");
+        policyTypes.add("Homeowners");
+
+        //create a for loop to select policy types to log in
+
+        for (int i = 0; i < policyTypes.size(); i++) {
+
+            driver.navigate().to("https://www.geico.com");
+
+            // click on login button
+            clickMethod(driver, "//*[text()='Log In']", "loginButton");
+
+            //select the policy type from login dropdown by visible text
+            selectByVisibleText(driver, "//*[@id='manage_select']", policyTypes.get(i), "policyTypeDropdown");
+
+            //click on login button
+            clickMethod(driver, "//*[@id='manageSubmit']", "loginButton");
+
+            System.out.println("Successfully attempted to login with policy type: " + policyTypes.get(i));
+
+        }//end of for loop
+    }//end of test1
+
+    @Test(priority = 2)
+
+    public void TC2_fidelisCareSwitchTabs() throws InterruptedException {
+        //navigate to fideliscare homepage
+        driver.navigate().to("https://www.fideliscare.org");
+
+        //click on shop for a plan
+        clickMethod(driver, "//*[text()='Shop For a Plan']", "shopButton");
+
+        //click on the first shop
+        clickMethod(driver,"//*[text()='Shop for a Plan']","firstShop");
+
+        //scroll to the search link for medical professionals using scroll by element method
+        scrollByElement(driver,"//*[contains(text(),'Search for a medical professional')]","searchLink");
+
+        //click on search link
+        clickMethod(driver,"//*[@href='/Find-A-Doctor']","searchLink");
+
+        //switch to new tab that opens
+        switchTabs(driver, 1);
+
+        //wait 2 seconds
+        Thread.sleep(2000);
+
+    }//end of test2
+
+
+}//end of class
